@@ -41,7 +41,7 @@ func ParseLevel(lvl string) (Level, error) {
 	}
 
 	var l Level
-	return l, fmt.Errorf("not a valid logrus Level: %q", lvl)
+	return l, fmt.Errorf("not a valid glog Level: %q", lvl)
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler.
@@ -63,9 +63,9 @@ func (level Level) MarshalText() ([]byte, error) {
 	case DebugLevel:
 		return []byte("debug"), nil
 	case InfoLevel:
-		return []byte("info"), nil
+		return []byte("info "), nil
 	case WarnLevel:
-		return []byte("warning"), nil
+		return []byte("warn "), nil
 	case ErrorLevel:
 		return []byte("error"), nil
 	case FatalLevel:
@@ -74,7 +74,7 @@ func (level Level) MarshalText() ([]byte, error) {
 		return []byte("panic"), nil
 	}
 
-	return nil, fmt.Errorf("not a valid logrus level %d", level)
+	return nil, fmt.Errorf("not a valid glog level %d", level)
 }
 
 // A constant exposing all logging levels

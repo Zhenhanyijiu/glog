@@ -135,22 +135,27 @@ func (f *TextFormatter) Format(entry *Entry) ([]byte, error) {
 
 	fixedKeys := make([]string, 0, 4+len(data))
 	if !f.DisableTimestamp {
-		fmt.Println("###timmmmmmmmmm:", f.FieldMap.resolve(FieldKeyTime))
+		//fmt.Println("###timmmmmmmmmm:", f.FieldMap.resolve(FieldKeyTime))
+		//time
 		fixedKeys = append(fixedKeys, f.FieldMap.resolve(FieldKeyTime))
-		fmt.Println("######fixedKeys::", fixedKeys)
+		//fmt.Println("######fixedKeys::", fixedKeys)
 	}
+	//level
 	fixedKeys = append(fixedKeys, f.FieldMap.resolve(FieldKeyLevel))
 
-	fmt.Println("######fixedKeys1::", fixedKeys)
+	//fmt.Println("######fixedKeys1::", fixedKeys)
 
+	//msg
 	if entry.Message != "" {
 		fixedKeys = append(fixedKeys, f.FieldMap.resolve(FieldKeyMsg))
 	}
+
+	//glog_error
 	if entry.err != "" {
 		fixedKeys = append(fixedKeys, f.FieldMap.resolve(FieldKeyLogrusError))
 	}
 	if entry.HasCaller() {
-		fmt.Println("###HasCaller:.....")
+		//fmt.Println("###HasCaller:.....")
 		if f.CallerPrettyfier != nil {
 
 			funcVal, fileVal = f.CallerPrettyfier(entry.Caller)
@@ -159,14 +164,18 @@ func (f *TextFormatter) Format(entry *Entry) ([]byte, error) {
 			fileVal = fmt.Sprintf("%s:%d", entry.Caller.File, entry.Caller.Line)
 		}
 
+		//fmt.Println("#####funcVal:", funcVal)
+		//func
 		if funcVal != "" {
 			fixedKeys = append(fixedKeys, f.FieldMap.resolve(FieldKeyFunc))
 		}
+		//file
 		if fileVal != "" {
 			fixedKeys = append(fixedKeys, f.FieldMap.resolve(FieldKeyFile))
 		}
 	}
 
+	//fmt.Println("#####DisableSorting", f.DisableSorting)
 	if !f.DisableSorting {
 		if f.SortingFunc == nil {
 			sort.Strings(keys)
@@ -182,6 +191,7 @@ func (f *TextFormatter) Format(entry *Entry) ([]byte, error) {
 	} else {
 		fixedKeys = append(fixedKeys, keys...)
 	}
+	//fmt.Println("######fixedKeys2::", fixedKeys)
 
 	var b *bytes.Buffer
 	if entry.Buffer != nil {
@@ -205,6 +215,7 @@ func (f *TextFormatter) Format(entry *Entry) ([]byte, error) {
 			switch {
 			case key == f.FieldMap.resolve(FieldKeyTime):
 				value = entry.Time.Format(timestampFormat)
+				//fmt.Println("#####>>>", value)
 			case key == f.FieldMap.resolve(FieldKeyLevel):
 				value = entry.Level.String()
 			case key == f.FieldMap.resolve(FieldKeyMsg):
@@ -308,6 +319,8 @@ func (f *TextFormatter) appendKeyValue(b *bytes.Buffer, key string, value interf
 	if b.Len() > 0 {
 		b.WriteByte(' ')
 	}
+
+	b.WriteString("[")
 	b.WriteString(key)
 	b.WriteByte('=')
 	f.appendValue(b, value)
@@ -324,4 +337,5 @@ func (f *TextFormatter) appendValue(b *bytes.Buffer, value interface{}) {
 	} else {
 		b.WriteString(fmt.Sprintf("%q", stringVal))
 	}
+	b.WriteString("]")
 }

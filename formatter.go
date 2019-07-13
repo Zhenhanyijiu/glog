@@ -8,7 +8,7 @@ const (
 	FieldKeyMsg            = "msg"
 	FieldKeyLevel          = "level"
 	FieldKeyTime           = "time"
-	FieldKeyLogrusError    = "logrus_error"
+	FieldKeyLogrusError    = "glog_error"
 	FieldKeyFunc           = "func"
 	FieldKeyFile           = "file"
 )

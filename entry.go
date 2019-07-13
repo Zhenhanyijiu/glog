@@ -253,7 +253,7 @@ func (entry *Entry) write() {
 	entry.Logger.mu.Lock()
 	defer entry.Logger.mu.Unlock()
 	serialized, err := entry.Logger.Formatter.Format(entry)
-	fmt.Println("########serialized::", string(serialized))
+	//fmt.Println("########serialized::", string(serialized))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to obtain reader, %v\n", err)
 	} else {
